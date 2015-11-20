@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
@@ -60,10 +61,14 @@ public class UserInterface extends JFrame {
 			public void actionPerformed(ActionEvent ev) {
 				String firstIP = textField.getText();
 				String secondIP = textField_1.getText();
-				// IpRange.startIpRange(firstIP, secondIP);
-				IpRange ir = new IpRange(firstIP, secondIP);
-				textArea.setText(ir.toString());
-
+				IpRange ip = new IpRange(firstIP, secondIP);
+				if (ip.getIpRange() == null) {
+					textArea.setText("No available adresses!");
+				} else {
+					for (String i : ip.getIpRange()) {
+						textArea.append(i + "\n");
+					}
+				}
 			}
 		});
 		go.setBounds(92, 49, 139, 23);

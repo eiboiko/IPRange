@@ -1,29 +1,22 @@
-import java.awt.List;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class IpRange {
 	private static final long m0 = 256 * 256 * 256;
 	private static final long m1 = 256 * 256;
 	private static final long m2 = 256;
 
-	private final byte mFirstIP[];
-	private final byte mSecondIP[];
-
-	public static IpRange startIpRange(String firstIP, String secondIP) {
-		return new IpRange(firstIP, secondIP);
-	}
+	private static byte mFirstIP[];
+	private static byte mSecondIP[];
 
 	public IpRange(String mFirstIP, String mSecondIP) {
-		this.mFirstIP = parseFirstMas(mFirstIP);
-		this.mSecondIP = parseSecondMas(mSecondIP);
+		IpRange.mFirstIP = parseFirstMas(mFirstIP);
+		IpRange.mSecondIP = parseSecondMas(mSecondIP);
 		getIpRange();
-		arrayListToString();
 	}
 
-	public long inetAddrToLong(InetAddress ia) {
+	private static long inetAddrToLong(InetAddress ia) {
 		byte iab[] = ia.getAddress();
 		int i0 = iab[0];
 		if (i0 < 0)
@@ -40,7 +33,7 @@ public class IpRange {
 		return (m0 * i0) + (m1 * i1) + (m2 * i2) + i3;
 	}
 
-	public String ipToStr(long ip) {
+	private static String ipToStr(long ip) {
 		long a = ip;
 		long r0 = a / m0;
 		a -= (r0 * m0);
@@ -86,8 +79,8 @@ public class IpRange {
 		return ip2;
 	}
 
-	public ArrayList<InetAddress> getIpRange() {
-		ArrayList<InetAddress> array = new ArrayList<>();
+	public ArrayList<String> getIpRange() {
+		ArrayList<String> array = new ArrayList<>();
 		try {
 			InetAddress adr = InetAddress.getByAddress(mFirstIP);
 			InetAddress adr2 = InetAddress.getByAddress(mSecondIP);
@@ -97,31 +90,17 @@ public class IpRange {
 
 			InetAddress check = InetAddress.getByName(ipToStr(ip1));
 			while (ip1 != ip2) {
+
 				if (check.isReachable(1000)) {
-					array.add(check);
-					ip1++;
+					array.add(ipToStr(ip1));
 					return array;
-				} else
-					System.out.println("adress not correct");
-				break;
+				}
+				ip1++;
 			}
+			array = null;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return array;
 	}
-
-	public String arrayListToString() {
-
-		for (InetAddress element : getIpRange()) {
-			System.out.println(element);
-		}
-		return Arrays.ToString(array);
-	}
-
-	@Override
-	public String toString() {
-		return arrayListToString();
-	}
-
 }
